@@ -6,7 +6,7 @@ function App() {
 
   run();
 
-  return <div className="App"></div>;
+  return <div className="App">learn react</div>;
 }
 
 export default App;
