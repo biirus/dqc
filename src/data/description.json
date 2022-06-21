@@ -1,0 +1,5 @@
+{
+  "model": ["4W", "4X4", "AWD", "FFV", "SWB", "LWB", "EWB"],
+  "transmition": ["A", "AM", "AS", "AV", "M"],
+  "fuelType": ["X", "Z", "D", "E", "N"]
+}
