@@ -8,22 +8,26 @@ import { isNegative } from "./is-negative";
 import { isNotEqual } from "./is-not-equal";
 import { isZero } from "./is-zero";
 
-import data from "../../data/models.json";
-
-// const isMakeEmpty = compose(isEmpty, prop("make"));
+import { isInvalidFuelType } from "./is-invalid-fuel-type";
+import { isInvalidTransmission } from "./is-invalid-transmission";
+import { isInvalidModel } from "./is-invalid-model";
+import { roundToFirstDecimal } from "../round-to-decimal";
 
 const mpgToL100 = (value: number) => {
   // according to Google
   // 235.215/(1 US mpg) = 235.215 L/100km
 
   // however, according to the data this coefficient = 280 🤷
-  return Math.round((280 / value) * 10) / 10; // round to first decimal place;
+  return roundToFirstDecimal(280 / value); // round to first decimal place;
 };
 
 export const validators: Validators = {
   make: [compose(isEmpty, prop("make"))],
 
-  model: [compose(isEmpty, prop("model"))],
+  model: [
+    compose(isInvalidModel, prop("model")),
+    compose(isEmpty, prop("model")),
+  ],
 
   vehicleClass: [compose(isEmpty, prop("vehicleClass"))],
 
@@ -37,6 +41,16 @@ export const validators: Validators = {
     compose(isNegative, prop("cylinders")),
     compose(isZero, prop("cylinders")),
     compose(isEmpty, prop("cylinders")),
+  ],
+
+  fuelType: [
+    compose(isInvalidFuelType, prop("fuelType")),
+    compose(isEmpty, prop("fuelType")),
+  ],
+
+  transmission: [
+    compose(isInvalidTransmission, prop("transmission")),
+    compose(isEmpty, prop("transmission")),
   ],
 
   // by a general logic a city fuel consumtion should be >= than hwy or comb
@@ -103,35 +117,3 @@ export const validators: Validators = {
     compose(isEmpty, prop("co2")),
   ],
 };
-
-export const run = () => {
-  let x = 0;
-  data.forEach((row) => {
-    if (row.cylinders > 12) {
-      console.log(row);
-    }
-    Object.entries(validators).forEach(([key, list]) => {
-      const result = list.map((fn) => fn(row)).filter(Boolean);
-
-      if (result.length > 0) {
-        x += 1;
-        // console.log(row.model, key, result);
-      }
-    });
-  });
-
-  console.log(x);
-};
-
-//  "make": "ASTON MARTIN",
-//     "model": "RAPIDE",
-//     "vehicleClass": "SUBCOMPACT",
-//     "engine": 5.9,
-//     "cylinders": 12,
-//     "transmission": "A6",
-//     "fuelType": "Z",
-//     "fuelConsumptionCity": 18,
-//     "fuelConsumptionHwy": 12.6,
-//     "fuelConsumptionComb": 15.6,
-//     "fuelConsumptionCombMGP": 18,
-//     "co2": 359
