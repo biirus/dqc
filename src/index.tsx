@@ -12,7 +12,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <main className="flex flex-col items-center justify-center p-4 overflow-hidden gap-4 w-[100vw] h-[100vh] bg-gradient-to-br from-blue-100 to-pink-100">
+      <App />
+    </main>
   </React.StrictMode>
 );
 
